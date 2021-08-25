@@ -26,8 +26,8 @@ gradlePlugin {
 }
 
 pluginBundle {
-    website = 'https://github.com/yaozhihang/plugin-gradle-semver/'
-    vcsUrl = 'https://github.com/yaozhihang/plugin-gradle-semver'
+    website = 'https://github.com/virtualcitySYSTEMS/gradle-plugin-semver/'
+    vcsUrl = 'https://github.com/virtualcitySYSTEMS/gradle-plugin-semver'
     description = 'A gradle plugin allowing to automatically bump the patch version for a CI/CD process.'
     tags = ['virtualcitysystems', 'semver', 'gradle']
 
