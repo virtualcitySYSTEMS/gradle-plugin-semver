@@ -9,6 +9,12 @@ attribute for containing the project version, for example:
 {"version": "1.0.0"}
 ```
 
+You can add the following code in your `build.gradle` file to set your project version based on the `version.json`.
+
+``` groovy
+version new JsonSlurper().parseText(new File("$rootDir/version.json").text)["version"]
+```
+
 In the next step, you need to apply the semver plugin by adapting your `build.gradle` file like the following:
 
 ``` json
