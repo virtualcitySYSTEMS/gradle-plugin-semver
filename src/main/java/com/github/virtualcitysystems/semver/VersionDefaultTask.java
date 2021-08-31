@@ -62,7 +62,7 @@ public abstract class VersionDefaultTask extends DefaultTask {
             }
         }
 
-        System.out.println("The version number in the version.json file has been bumped to '" + newVersion + "' successfully.");
+        System.out.println("Bumping version from '" + version + "' to '" + newVersion + "' successfully finished.");
     }
 
     protected abstract String getVersion(String[] split) throws Exception;
