@@ -7,5 +7,6 @@ public class SemverPlugin implements Plugin<Project> {
     @Override
     public void apply(Project project) {
         project.getTasks().register("bumpVersionPatch", VersionPatchTask.class);
+        project.getTasks().register("bumpVersionPrerelease", VersionPrereleaseTask.class);
     }
 }
