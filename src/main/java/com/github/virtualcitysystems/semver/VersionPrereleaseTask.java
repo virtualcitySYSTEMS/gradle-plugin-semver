@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class VersionPrereleaseTask extends VersionDefaultTask {
     @Override
-    protected String getVersion(String[] split) throws Exception {
+    protected String getNewVersion(String[] split) throws Exception {
         String[] copy = Arrays.copyOf(split, split.length);
 
         String lastDigit = copy[copy.length - 1];

@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class VersionPatchTask extends VersionDefaultTask {
     @Override
-    protected String getVersion(String[] split) throws Exception {
+    protected String getNewVersion(String[] split) throws Exception {
         String[] copy = Arrays.copyOf(split, 3);
 
         if (split.length == 4) {
