@@ -12,17 +12,17 @@ attribute for containing the project version, for example:
 You can add the following code in your `build.gradle` file to set your project version based on the `version.json`.
 
 ``` groovy
-version new JsonSlurper().parseText(new File("$rootDir/version.json").text)["version"]
+version bumpVersionPatch.getCurrentVersion()
 ```
 
 In the next step, you need to apply the semver plugin by adapting your `build.gradle` file like the following:
 
 ``` groovy
 plugins {
-  id 'com.github.virtualcitysystems.semver' version '1.0.0'
+  id 'com.github.virtualcitysystems.semver' version '1.0.3'
 }
 ```
 
-After reloading the gradle project, a new gradle task `bumpVersionPatch` is available. Once it has been executed, the patch number of the version will be incremented by 1. In this example, the version
-will be bumped to `1.0.1` and written back into the json file automatically. Essentially, the gradle task works very similar to the npm command `npm version patch`. You may use this plugin to implement
-the automatic version bumping for your CI/CD workflow. 
+After reloading the gradle project, a new gradle task `bumpVersionPatch` is available. After executing that task, the patch version number will be incremented by 1. In this example, the version
+number will be bumped to `1.0.1` and saved into the json file `version.json`. Essentially, this gradle task works very similar to the npm command `npm version patch`. You may use this plugin to
+automatically patch version number in your CI/CD workflow. 
