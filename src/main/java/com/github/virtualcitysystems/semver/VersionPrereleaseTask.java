@@ -3,6 +3,10 @@ package com.github.virtualcitysystems.semver;
 public class VersionPrereleaseTask extends VersionTask {
     @Override
     protected String getNewVersion(Version version) {
-        return version.incrementPreRelease().toVersionString(true);
+        version = version.isReleaseCandidate() ?
+                version.incrementPreRelease() :
+                version.incrementPatch();
+
+        return version.toVersionString(true);
     }
 }
