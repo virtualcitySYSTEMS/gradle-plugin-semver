@@ -1,83 +1,58 @@
 package com.github.virtualcitysystems.semver;
 
+import com.fasterxml.jackson.core.JsonEncoding;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.TaskAction;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.File;
 import java.io.IOException;
-import java.util.regex.Pattern;
 
-public abstract class VersionDefaultTask extends DefaultTask {
+public abstract class VersionTask extends DefaultTask {
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    public VersionDefaultTask() {
+    public VersionTask() {
         setGroup("semver");
     }
 
-    @SuppressWarnings("unchecked")
+    protected abstract String getNewVersion(Version version) throws Exception;
+
     @TaskAction
     public void doAction() throws Exception {
-        String version = getCurrentVersion();
-        String versionFilePath = getVersionFilePath();
+        String currentVersion = getCurrentVersion();
+        String newVersion = getNewVersion(Version.of(currentVersion));
 
-        String[] split = version.split(Pattern.quote("."));
-        if (split.length != 3 && split.length != 4) {
-            throw new Exception("The version '" + version + "' in the version.json file does not follow the semver layout 'major.minor.patch[-rc.prerelease]'.");
-        }
-
-        JSONObject jsonObject = new JSONObject();
-        String newVersion = getNewVersion(split);
-        jsonObject.put("version", newVersion);
-
-        FileWriter file = null;
-        try {
-            file = new FileWriter(versionFilePath);
-            file.write(jsonObject.toJSONString());
+        try (JsonGenerator writer = mapper.createGenerator(getVersionFile(), JsonEncoding.UTF8)) {
+            writer.writeStartObject();
+            writer.writeStringField("version", newVersion);
+            writer.writeEndObject();
         } catch (IOException e) {
-            throw new Exception("Failed to save the new bumped version into the JSON file '" + versionFilePath + "'." , e);
-        } finally {
-            if (file != null) {
-                try {
-                    file.flush();
-                    file.close();
-                } catch (IOException e) {
-                    //
-                }
-            }
+            throw new Exception("Failed to write version file.", e);
         }
 
-        System.out.println("Bumping version from '" + version + "' to '" + newVersion + "' successfully finished.");
+        System.out.println("Bumping version from '" + currentVersion + "' to '" +
+                newVersion + "' successfully finished.");
     }
 
     @Internal
     public String getCurrentVersion() throws Exception {
-        String versionFilePath = getVersionFilePath();
-        JSONParser parser = new JSONParser();
-
-        JSONObject jsonObject;
-        try {
-            jsonObject = (JSONObject) parser.parse(new FileReader(versionFilePath));
-        } catch (FileNotFoundException e) {
-            throw new Exception("The version.json file is not found in the project root directory.");
-        } catch (Throwable e) {
-            throw new Exception("Failed to parse the version.json file. Please check if it has a valid JSON structure.");
+        try (JsonParser parser = mapper.createParser(getVersionFile())) {
+            JsonNode node = mapper.readTree(parser);
+            if (node != null && node.has("version")) {
+                return node.get("version").asText();
+            } else {
+                throw new Exception("No \"version\" property found in version.json file. ");
+            }
+        } catch (IOException e) {
+            throw new Exception("Failed to parse version.json file.", e);
         }
-
-        String version = (String) jsonObject.get("version");
-        if (version == null) {
-            throw new Exception("The version attribute is missing in the version.json file.");
-        }
-
-        return version;
     }
 
-    private String getVersionFilePath() {
-        return getProject().getProjectDir().toPath().resolve("version.json").toAbsolutePath().toString();
+    private File getVersionFile() {
+        return getProject().getProjectDir().toPath().resolve("version.json").toFile();
     }
-
-    protected abstract String getNewVersion(String[] split) throws Exception;
 }

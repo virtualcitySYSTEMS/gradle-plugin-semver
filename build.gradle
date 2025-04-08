@@ -1,39 +1,40 @@
 plugins {
-    id 'java-gradle-plugin'
-    id 'maven-publish'
-    id 'com.gradle.plugin-publish' version '0.15.0'
+    id 'com.gradle.plugin-publish' version '1.3.1'
+}
+
+group = 'com.github.virtualcitysystems'
+version = '1.0.3'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+repositories {
+    mavenCentral()
 }
 
 dependencies {
-    api 'com.googlecode.json-simple:json-simple:1.1.1'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.18.3'
 }
 
-group 'com.github.virtualcitysystems'
-version '1.0.3'
-
-repositories {
-    mavenLocal()
-    mavenCentral()
+javadoc {
+    options {
+        addStringOption('Xdoclint:none', '-quiet')
+    }
 }
 
 gradlePlugin {
     plugins {
-        SemverPlugin {
+        website.set("https://github.com/virtualcitySYSTEMS/gradle-plugin-semver")
+        vcsUrl.set("https://github.com/virtualcitySYSTEMS/gradle-plugin-semver")
+        create("semverPlugin") {
             id = 'com.github.virtualcitysystems.semver'
             implementationClass = 'com.github.virtualcitysystems.semver.SemverPlugin'
-        }
-    }
-}
-
-pluginBundle {
-    website = 'https://github.com/virtualcitySYSTEMS/gradle-plugin-semver/'
-    vcsUrl = 'https://github.com/virtualcitySYSTEMS/gradle-plugin-semver'
-    description = 'A gradle plugin allowing to automatically bump the patch version for a CI/CD process.'
-    tags = ['virtualcitysystems', 'semver', 'gradle']
-
-    plugins {
-        SemverPlugin {
             displayName = 'Gradle plugin for semantic versioning'
+            description = 'A gradle plugin allowing to automatically bump the patch version for a CI/CD process.'
+            tags.addAll("virtualcitysystems", "semver", "gradle")
         }
     }
 }
