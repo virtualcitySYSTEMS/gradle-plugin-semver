@@ -22,7 +22,7 @@ In the next step, you need to apply the semver plugin by adapting your `build.gr
 
 ``` groovy
 plugins {
-  id 'com.github.virtualcitysystems.semver' version '1.0.4'
+  id 'com.github.virtualcitysystems.semver' version '1.0.5'
 }
 ```
 
