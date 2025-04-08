@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gradle.api.DefaultTask;
+import org.gradle.api.tasks.Input;
 import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.TaskAction;
 
@@ -13,7 +14,8 @@ import java.io.File;
 import java.io.IOException;
 
 public abstract class VersionTask extends DefaultTask {
-    private final ObjectMapper mapper = new ObjectMapper();
+    @Input
+    File projectDir;
 
     public VersionTask() {
         setGroup("semver");
@@ -26,6 +28,7 @@ public abstract class VersionTask extends DefaultTask {
         String currentVersion = getCurrentVersion();
         String newVersion = getNewVersion(Version.of(currentVersion));
 
+        ObjectMapper mapper = new ObjectMapper();
         try (JsonGenerator writer = mapper.createGenerator(getVersionFile(), JsonEncoding.UTF8)) {
             writer.writeStartObject();
             writer.writeStringField("version", newVersion);
@@ -34,12 +37,12 @@ public abstract class VersionTask extends DefaultTask {
             throw new Exception("Failed to write version file.", e);
         }
 
-        System.out.println("Bumping version from '" + currentVersion + "' to '" +
-                newVersion + "' successfully finished.");
+        getLogger().lifecycle("Bumping version from '{}' to '{}' successfully finished.", currentVersion, newVersion);
     }
 
     @Internal
     public String getCurrentVersion() throws Exception {
+        ObjectMapper mapper = new ObjectMapper();
         try (JsonParser parser = mapper.createParser(getVersionFile())) {
             JsonNode node = mapper.readTree(parser);
             if (node != null && node.has("version")) {
@@ -53,6 +56,6 @@ public abstract class VersionTask extends DefaultTask {
     }
 
     private File getVersionFile() {
-        return getProject().getProjectDir().toPath().resolve("version.json").toFile();
+        return projectDir.toPath().resolve("version.json").toFile();
     }
 }
