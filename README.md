@@ -5,25 +5,37 @@ versioning in Java projects.
 
 ###  How to use it
 
-In your java project, you need to first create a json file `version.json` in the project root directory. The json file
-should have a `version` attribute for containing the project version, for example:
+In your Java project, you need to first create a json file `version.json` in the project root directory. The json file
+must have a `version` attribute for containing the project version, for example:
 
 ``` json
 {"version": "1.0.0"}
 ```
 
-You can add the following code in your `build.gradle` file to set your project version based on the `version.json`.
+Next, define the plugin and the version to use in the `pluginManagement` block, and place this block at the
+beginning of your `settings.gradle` file:
 
 ``` groovy
-version bumpVersionPatch.getCurrentVersion()
+pluginManagement {
+    plugins {
+        id 'com.github.virtualcitysystems.semver' version '1.1.0'
+    }
+}
 ```
 
-In the next step, you need to apply the semver plugin by adapting your `build.gradle` file like the following:
+Afterward, you need to apply the semver plugin by adapting your `build.gradle` file like the following:
 
 ``` groovy
 plugins {
-  id 'com.github.virtualcitysystems.semver' version '1.0.5'
+    id 'com.github.virtualcitysystems.semver'
 }
+```
+
+Once everything is set up, you can add the following code in your `build.gradle` file to manage your project version
+based on the `version.json`.
+
+``` groovy
+version bumpVersionPatch.getCurrentVersion()
 ```
 
 After reloading the gradle project, a new gradle task `bumpVersionPatch` is available. After executing that task, the
