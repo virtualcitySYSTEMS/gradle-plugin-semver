@@ -34,7 +34,7 @@ gradlePlugin {
             implementationClass = 'com.github.virtualcitysystems.semver.SemverPlugin'
             displayName = 'Gradle plugin for semantic versioning'
             description = 'A gradle plugin allowing to automatically bump the patch version for a CI/CD process.'
-            tags.addAll("virtualcitysystems", "semver", "gradle")
+            tags.addAll("virtualcitysystems", "semver")
         }
     }
 }
