@@ -5,7 +5,7 @@ public class VersionPrereleaseTask extends VersionTask {
     protected String getNewVersion(Version version) {
         version = version.isReleaseCandidate() ?
                 version.incrementPreRelease() :
-                version.incrementPatch();
+                version.incrementMinor().resetPatch();
 
         return version.toVersionString(true);
     }

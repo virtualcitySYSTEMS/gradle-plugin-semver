@@ -37,7 +37,7 @@ public abstract class VersionTask extends DefaultTask {
             throw new Exception("Failed to write version file.", e);
         }
 
-        getLogger().lifecycle("Bumping version from '{}' to '{}' successfully finished.", currentVersion, newVersion);
+        getLogger().lifecycle("Bumping version from '{}' to '{}'.", currentVersion, newVersion);
     }
 
     @Internal

@@ -48,6 +48,11 @@ public class Version {
         return this;
     }
 
+    public Version resetMajor() {
+        major = 0;
+        return this;
+    }
+
     public int getMinor() {
         return minor;
     }
@@ -57,12 +62,22 @@ public class Version {
         return this;
     }
 
+    public Version resetMinor() {
+        minor = 0;
+        return this;
+    }
+
     public int getPatch() {
         return patch;
     }
 
     public Version incrementPatch() {
         patch++;
+        return this;
+    }
+
+    public Version resetPatch() {
+        patch = 0;
         return this;
     }
 
