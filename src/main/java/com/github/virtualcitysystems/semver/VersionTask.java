@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.gradle.api.DefaultTask;
-import org.gradle.api.tasks.InputFile;
+import org.gradle.api.tasks.InputDirectory;
 import org.gradle.api.tasks.Internal;
 import org.gradle.api.tasks.TaskAction;
 
@@ -22,7 +22,7 @@ public abstract class VersionTask extends DefaultTask {
 
     protected abstract String getNewVersion(Version version) throws Exception;
 
-    @InputFile
+    @InputDirectory
     public File getProjectDir() {
         return projectDir;
     }
